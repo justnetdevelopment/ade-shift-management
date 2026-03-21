@@ -8,7 +8,8 @@ import { ClosurePage } from './pages/ClosurePage'
 import { InspectionPage } from './pages/InspectionPage'
 import { BalancesPage } from './pages/BalancesPage'
 import { CostsPage } from './pages/CostsPage'
-import type { AppPage } from './types'
+import type { AppPage, StandardWeekShift } from './types'
+import { MOCK_STANDARD_WEEKS } from './mock-data'
 
 function ComingSoon({ label }: { label: string }) {
   return (
@@ -24,6 +25,11 @@ function ComingSoon({ label }: { label: string }) {
 export default function App() {
   const [activePage,           setActivePage]           = useState<AppPage>('planning')
   const [scheduleEmploymentId, setScheduleEmploymentId] = useState<string | null>(null)
+  const [standardWeeks, setStandardWeeks] = useState<Record<string, StandardWeekShift[]>>(MOCK_STANDARD_WEEKS)
+
+  function handleUpdateStandardWeek(empId: string, shifts: StandardWeekShift[]) {
+    setStandardWeeks(prev => ({ ...prev, [empId]: shifts }))
+  }
 
   function handleViewSchedule(empId: string) {
     setScheduleEmploymentId(empId)
@@ -42,9 +48,9 @@ export default function App() {
 
   return (
     <AppShell activePage={activePage} onPageChange={handlePageChange}>
-      {activePage === 'planning'           && <PlanningPage />}
+      {activePage === 'planning'           && <PlanningPage standardWeeks={standardWeeks} />}
       {activePage === 'time-tracking'      && <TimeTrackingPage />}
-      {activePage === 'employees'          && <EmployeesPage onViewSchedule={handleViewSchedule} />}
+      {activePage === 'employees'          && <EmployeesPage onViewSchedule={handleViewSchedule} standardWeeks={standardWeeks} onUpdateStandardWeek={handleUpdateStandardWeek} />}
       {activePage === 'employee-schedule'  && scheduleEmploymentId &&
         <EmployeeSchedulePage employmentId={scheduleEmploymentId} onBack={handleBackFromSchedule} />
       }

@@ -1,4 +1,4 @@
-import type { Center, Employment, Shift, ValidationViolation, TimeEntry, Incident, WorkDay, ClosurePeriod, Balance } from './types'
+import type { Center, Employment, Shift, ValidationViolation, TimeEntry, Incident, WorkDay, ClosurePeriod, Balance, StandardWeekShift } from './types'
 
 export const MOCK_CENTERS: Center[] = [
   { id: 'c1', name: 'Arenal Centro', company_id: 'co1' },
@@ -70,6 +70,40 @@ export const MOCK_EMPLOYMENTS: Employment[] = [
     center_id: 'c2',
   },
 ]
+
+// Standard week templates per employment (day_of_week: 0=Mon … 6=Sun)
+export const MOCK_STANDARD_WEEKS: Record<string, StandardWeekShift[]> = {
+  // María García — 40h, full-time manager Mon–Fri 09:00–17:00
+  e1: [
+    { day_of_week: 0, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
+    { day_of_week: 1, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
+    { day_of_week: 2, start_time: '12:00', end_time: '20:00', center_id: 'c1', role: 'Jefe de sala' },
+    { day_of_week: 3, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
+    { day_of_week: 4, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
+  ],
+  // Ana Fernández — 32h, cocinera Mon–Thu 10:00–18:00
+  e3: [
+    { day_of_week: 0, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
+    { day_of_week: 1, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
+    { day_of_week: 2, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
+    { day_of_week: 3, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
+  ],
+  // Laura Moreno — 20h, camarera Wed–Sat 15:00–20:00
+  e5: [
+    { day_of_week: 2, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
+    { day_of_week: 3, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
+    { day_of_week: 4, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
+    { day_of_week: 5, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
+  ],
+  // Roberto Jiménez — 40h, encargado Mon–Fri 09:00–17:00
+  e6: [
+    { day_of_week: 0, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
+    { day_of_week: 1, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
+    { day_of_week: 2, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
+    { day_of_week: 3, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
+    { day_of_week: 4, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
+  ],
+}
 
 // Week of 2026-03-17 (Mon) to 2026-03-23 (Sun)
 export const MOCK_SHIFTS: Shift[] = [

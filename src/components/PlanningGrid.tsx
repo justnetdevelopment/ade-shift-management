@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { format, isToday, isWeekend, startOfMonth, endOfMonth, getDaysInMonth } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { CalendarDays, Users, Clock } from 'lucide-react'
-import type { Employment, Shift, ValidationViolation, PlanningStatus, WeekRange } from '../types'
+import type { Employment, Shift, ValidationViolation, PlanningStatus, WeekRange, StandardWeekShift } from '../types'
 import { EmployeeRow } from './EmployeeRow'
 import { PUBLIC_HOLIDAYS } from '../mock-data'
 
@@ -16,6 +16,8 @@ interface PlanningGridProps {
   allShifts: Shift[]       // all shifts — used for monthly totals
   violations: ValidationViolation[]
   planningStatus: PlanningStatus
+  standardWeeks: Record<string, StandardWeekShift[]>
+  onApplyStandardWeek: (employmentId: string) => void
   onCellClick: (employment: Employment, date: string, shift: Shift | null, cellRect?: DOMRect) => void
 }
 
@@ -37,6 +39,8 @@ export function PlanningGrid({
   allShifts,
   violations,
   planningStatus,
+  standardWeeks,
+  onApplyStandardWeek,
   onCellClick,
 }: PlanningGridProps) {
   const [totalMode, setTotalMode] = useState<TotalMode>('week')
@@ -180,6 +184,8 @@ export function PlanningGrid({
               planningStatus={planningStatus}
               totalHours={getTotalHours(employment)}
               contractedHours={getContractedHours(employment)}
+              hasStandardWeek={(standardWeeks[employment.id]?.length ?? 0) > 0}
+              onApplyStandardWeek={() => onApplyStandardWeek(employment.id)}
               onCellClick={onCellClick}
             />
           )

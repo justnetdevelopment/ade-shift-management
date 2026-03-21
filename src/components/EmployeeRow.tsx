@@ -1,5 +1,6 @@
 import type { Employment, Shift, ValidationViolation } from '../types'
 import { ShiftCell } from './ShiftCell'
+import { CalendarClock } from 'lucide-react'
 import { format } from 'date-fns'
 import { PUBLIC_HOLIDAYS } from '../mock-data'
 
@@ -11,6 +12,8 @@ interface EmployeeRowProps {
   planningStatus: string
   totalHours: number
   contractedHours: number
+  hasStandardWeek: boolean
+  onApplyStandardWeek: () => void
   onCellClick: (employment: Employment, date: string, shift: Shift | null, cellRect?: DOMRect) => void
 }
 
@@ -33,6 +36,8 @@ export function EmployeeRow({
   planningStatus,
   totalHours,
   contractedHours,
+  hasStandardWeek,
+  onApplyStandardWeek,
   onCellClick,
 }: EmployeeRowProps) {
   const weekHours = getWeekHours(shifts)
@@ -79,6 +84,15 @@ export function EmployeeRow({
             <span className="text-2xs text-neutral-400 tabular-nums">
               {employment.contracted_hours_week}h
             </span>
+            {hasStandardWeek && !isLocked && (
+              <button
+                onClick={e => { e.stopPropagation(); onApplyStandardWeek() }}
+                title="Aplicar semana tipo"
+                className="ml-1 p-0.5 rounded text-shift-400 hover:text-shift-700 hover:bg-shift-50 transition-colors"
+              >
+                <CalendarClock className="w-3 h-3" />
+              </button>
+            )}
           </div>
         </div>
       </div>

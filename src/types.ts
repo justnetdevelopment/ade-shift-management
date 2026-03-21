@@ -72,6 +72,17 @@ export interface PlanningFilters {
   show_violations_only: boolean
 }
 
+// ─── Standard Week Template (PRD §6.2 — planning template per employee) ───────
+
+// day_of_week: 0 = Monday … 6 = Sunday (matches date-fns weekStartsOn: 1)
+export interface StandardWeekShift {
+  day_of_week: 0 | 1 | 2 | 3 | 4 | 5 | 6
+  start_time: string  // 'HH:mm'
+  end_time: string    // 'HH:mm'
+  center_id: string
+  role: string
+}
+
 // ─── App Routing ───────────────────────────────────────────────────────────────
 
 export type AppPage =

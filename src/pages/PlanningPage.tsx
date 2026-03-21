@@ -18,7 +18,7 @@ import { PlanningGrid } from '../components/PlanningGrid'
 import { ShiftDrawer } from '../components/ShiftDrawer'
 import { QuickAddPopover } from '../components/QuickAddPopover'
 
-import type { Employment, Shift, ValidationViolation, WeekRange, PlanningStatus, PlanningFilters } from '../types'
+import type { Employment, Shift, ValidationViolation, WeekRange, PlanningStatus, PlanningFilters, StandardWeekShift } from '../types'
 import {
   MOCK_EMPLOYMENTS,
   MOCK_SHIFTS,
@@ -37,7 +37,11 @@ function getWeekDays(weekRange: WeekRange): Date[] {
 // The week of the mock data: 2026-03-17
 const INITIAL_WEEK = getWeekRange(new Date('2026-03-17'))
 
-export function PlanningPage() {
+interface PlanningPageProps {
+  standardWeeks: Record<string, StandardWeekShift[]>
+}
+
+export function PlanningPage({ standardWeeks }: PlanningPageProps) {
   const [weekRange, setWeekRange] = useState<WeekRange>(INITIAL_WEEK)
   const [planningStatus, setPlanningStatus] = useState<PlanningStatus>('draft')
   const [shifts, setShifts] = useState<Shift[]>(MOCK_SHIFTS)
@@ -225,6 +229,44 @@ export function PlanningPage() {
     setShifts(prev => [...prev, ...copiedShifts])
   }
 
+  function handleApplyStandardWeek(employmentId: string) {
+    const template = standardWeeks[employmentId]
+    if (!template || template.length === 0) return
+
+    const newShifts: Shift[] = []
+    for (const t of template) {
+      const targetDate = format(addDays(weekRange.start, t.day_of_week), 'yyyy-MM-dd')
+      // Skip days that already have shifts for this employee
+      const alreadyHasShift = weekShifts.some(
+        s => s.employment_id === employmentId && s.date === targetDate
+      )
+      if (alreadyHasShift) continue
+
+      const [sh, sm] = t.start_time.split(':').map(Number)
+      const [eh, em] = t.end_time.split(':').map(Number)
+      let minutes = (eh * 60 + em) - (sh * 60 + sm)
+      if (minutes < 0) minutes += 1440
+      const duration_hours = Math.round(minutes / 60 * 10) / 10
+
+      newShifts.push({
+        id: `s${Date.now()}-${Math.random()}`,
+        employment_id: employmentId,
+        date: targetDate,
+        start_time: t.start_time,
+        end_time: t.end_time,
+        center_id: t.center_id,
+        role: t.role,
+        status: 'draft',
+        duration_hours,
+      })
+    }
+
+    if (newShifts.length > 0) {
+      setShifts(prev => [...prev, ...newShifts])
+      recomputeViolations()
+    }
+  }
+
   const drawerViolations = selectedShift
     ? violations.filter(v => v.shift_id === selectedShift.id || v.employment_id === selectedEmployment?.id)
     : violations.filter(v => v.employment_id === selectedEmployment?.id)
@@ -275,6 +317,8 @@ export function PlanningPage() {
           allShifts={shifts}
           violations={violations}
           planningStatus={planningStatus}
+          standardWeeks={standardWeeks}
+          onApplyStandardWeek={handleApplyStandardWeek}
           onCellClick={handleCellClick}
         />
       </div>

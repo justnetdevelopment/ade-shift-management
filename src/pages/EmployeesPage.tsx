@@ -1,16 +1,21 @@
 import { useState } from 'react'
-import { Search, ChevronDown, CalendarDays, Users } from 'lucide-react'
+import { Search, ChevronDown, CalendarDays, Users, CalendarClock } from 'lucide-react'
 import { MOCK_EMPLOYMENTS, MOCK_CENTERS } from '../mock-data'
+import { StandardWeekDrawer } from '../components/StandardWeekDrawer'
+import type { Employment, StandardWeekShift } from '../types'
 
-const GRID = 'grid grid-cols-[3rem_minmax(180px,1fr)_140px_150px_80px_100px_110px]'
+const GRID = 'grid grid-cols-[3rem_minmax(180px,1fr)_140px_150px_80px_100px_140px]'
 
 interface EmployeesPageProps {
   onViewSchedule: (employmentId: string) => void
+  standardWeeks: Record<string, StandardWeekShift[]>
+  onUpdateStandardWeek: (empId: string, shifts: StandardWeekShift[]) => void
 }
 
-export function EmployeesPage({ onViewSchedule }: EmployeesPageProps) {
+export function EmployeesPage({ onViewSchedule, standardWeeks, onUpdateStandardWeek }: EmployeesPageProps) {
   const [search,       setSearch]       = useState('')
   const [filterCenter, setFilterCenter] = useState<string | null>(null)
+  const [drawerEmp,    setDrawerEmp]    = useState<Employment | null>(null)
 
   const filtered = MOCK_EMPLOYMENTS.filter(emp => {
     if (filterCenter && emp.center_id !== filterCenter) return false
@@ -155,8 +160,19 @@ export function EmployeesPage({ onViewSchedule }: EmployeesPageProps) {
                 </span>
               </div>
 
-              {/* Action */}
-              <div className="px-3 py-3">
+              {/* Actions */}
+              <div className="px-3 py-3 flex items-center gap-1.5">
+                <button
+                  onClick={() => setDrawerEmp(emp)}
+                  title="Configurar semana tipo"
+                  className={`p-1.5 rounded-md border transition-colors ${
+                    standardWeeks[emp.id]?.length
+                      ? 'border-shift-300 bg-shift-50 text-shift-600 hover:bg-shift-100'
+                      : 'border-neutral-200 text-neutral-400 hover:border-neutral-300 hover:bg-neutral-50'
+                  }`}
+                >
+                  <CalendarClock className="w-3.5 h-3.5" />
+                </button>
                 <button
                   onClick={() => onViewSchedule(emp.id)}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-shift-700 bg-shift-50 hover:bg-shift-100 border border-shift-200 rounded-md transition-colors whitespace-nowrap"
@@ -180,6 +196,15 @@ export function EmployeesPage({ onViewSchedule }: EmployeesPageProps) {
           </div>
         )}
       </div>
+
+      {/* Standard week drawer */}
+      <StandardWeekDrawer
+        employment={drawerEmp}
+        standardWeek={drawerEmp ? (standardWeeks[drawerEmp.id] ?? []) : []}
+        isOpen={drawerEmp !== null}
+        onClose={() => setDrawerEmp(null)}
+        onSave={onUpdateStandardWeek}
+      />
     </div>
   )
 }
