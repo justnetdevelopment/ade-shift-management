@@ -8,6 +8,7 @@ import { ClosurePage } from './pages/ClosurePage'
 import { InspectionPage } from './pages/InspectionPage'
 import { BalancesPage } from './pages/BalancesPage'
 import { CostsPage } from './pages/CostsPage'
+import { EmployeePortalPage } from './pages/EmployeePortalPage'
 import type { AppPage, StandardWeekShift } from './types'
 import { MOCK_STANDARD_WEEKS } from './mock-data'
 
@@ -44,6 +45,11 @@ export default function App() {
     // Clicking 'employees' in the nav always goes to the list
     if (page === 'employees') setScheduleEmploymentId(null)
     setActivePage(page)
+  }
+
+  // Employee portal renders outside the AppShell (its own mobile layout)
+  if (activePage === 'employee-portal') {
+    return <EmployeePortalPage onBack={() => setActivePage('planning')} />
   }
 
   return (

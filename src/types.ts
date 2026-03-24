@@ -95,6 +95,20 @@ export type AppPage =
   | 'costs'
   | 'inspection'
   | 'settings'
+  | 'employee-portal'
+
+// ─── Employee Portal Types ─────────────────────────────────────────────────────
+
+export type EmployeePortalTab = 'clock' | 'schedule' | 'history'
+
+/** Current clock state for the logged-in employee */
+export type ClockStatus =
+  | 'not_clocked_in'   // No entry today yet
+  | 'clocked_in'       // Has 'in' entry, no matching 'out'
+  | 'on_break'         // Last entry is 'break_start'
+  | 'clocked_out'      // Has matching 'out' entry — day done
+
+export type ScheduleViewMode = 'week' | 'month'
 
 // ─── Monthly Closure Types (PRD §6.4) ────────────────────────────────────────
 

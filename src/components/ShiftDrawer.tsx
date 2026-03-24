@@ -278,38 +278,6 @@ export function ShiftDrawer({
             </div>
           </div>
 
-          {/* Center */}
-          <div>
-            <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
-              Centro <span className="text-error-500">*</span>
-            </label>
-            <select
-              value={centerId}
-              onChange={e => setCenterId(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-sm text-neutral-900 border border-neutral-200 rounded-md focus:outline-none focus:ring-2 focus:ring-shift-500 focus:border-transparent"
-            >
-              {MOCK_CENTERS.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Role */}
-          <div>
-            <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
-              Rol <span className="text-error-500">*</span>
-            </label>
-            <select
-              value={role}
-              onChange={e => setRole(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-sm text-neutral-900 border border-neutral-200 rounded-md focus:outline-none focus:ring-2 focus:ring-shift-500 focus:border-transparent"
-            >
-              {MOCK_ROLES.map(r => (
-                <option key={r} value={r}>{r}</option>
-              ))}
-            </select>
-          </div>
-
           {/* Validation alerts for this shift */}
           {shiftViolations.length > 0 && (
             <div className="space-y-2">

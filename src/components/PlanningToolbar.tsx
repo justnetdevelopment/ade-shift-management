@@ -55,9 +55,9 @@ export function PlanningToolbar({
   }
 
   return (
-    <div className="flex-shrink-0 bg-white border-b border-neutral-200 px-4 py-2.5">
-      {/* Top row */}
-      <div className="flex items-center justify-between gap-4">
+    <div className="flex-shrink-0 bg-white border-b border-neutral-200 px-4">
+      {/* Top row — same height as sidebar logo (h-14) */}
+      <div className="flex items-center justify-between gap-4 h-14">
         {/* Week navigator */}
         <div className="flex items-center gap-2">
           <button

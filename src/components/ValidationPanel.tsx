@@ -37,7 +37,7 @@ const SEVERITY_CONFIG = {
 }
 
 export function ValidationPanel({ violations, onDismiss, onSelectEmployee }: ValidationPanelProps) {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(true)
 
   if (violations.length === 0) return null
 

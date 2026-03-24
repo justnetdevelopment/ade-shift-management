@@ -1,149 +1,344 @@
 import type { Center, Employment, Shift, ValidationViolation, TimeEntry, Incident, WorkDay, ClosurePeriod, Balance, StandardWeekShift } from './types'
 
 export const MOCK_CENTERS: Center[] = [
-  { id: 'c1', name: 'Arenal Centro', company_id: 'co1' },
-  { id: 'c2', name: 'Arenal Retiro', company_id: 'co1' },
-  { id: 'c3', name: 'Arenal Salamanca', company_id: 'co1' },
+  { id: 'c1', name: 'Alcobita',     company_id: 'co1' },
+  { id: 'c2', name: 'El Bandoler',  company_id: 'co1' },
+  { id: 'c3', name: 'Alcoba Azul',  company_id: 'co1' },
+  { id: 'c4', name: 'Rumbla',       company_id: 'co1' },
+  { id: 'c5', name: 'Arenal',       company_id: 'co1' },
+  { id: 'c6', name: 'Barcino',      company_id: 'co1' },
+  { id: 'c7', name: 'Xup Xup',      company_id: 'co1' },
+  { id: 'c8', name: 'Oficina',      company_id: 'co1' },
 ]
 
-export const MOCK_ROLES = ['Cocinero/a', 'Camarero/a', 'Ayudante cocina', 'Jefe de sala', 'Encargado/a']
+export const MOCK_ROLES = ['Sala', 'Cocina', 'Mantenimiento', 'Limpieza']
 
 export const MOCK_EMPLOYMENTS: Employment[] = [
   {
     id: 'e1',
     person_id: 'p1',
-    person: { id: 'p1', legal_name: 'María García López', national_id: '12345678A', avatar_initials: 'MG', avatar_color: '#4f46e5' },
+    person: { id: 'p1', legal_name: 'marc hernandez geli', national_id: '44001700D', avatar_initials: 'MH', avatar_color: '#4f46e5' },
     company_id: 'co1',
-    role: 'Jefe de sala',
+    role: 'Sala',
     contracted_hours_week: 40,
     status: 'active',
-    center_id: 'c1',
+    center_id: 'c5',
   },
   {
     id: 'e2',
     person_id: 'p2',
-    person: { id: 'p2', legal_name: 'Carlos Ruiz Martín', national_id: '87654321B', avatar_initials: 'CR', avatar_color: '#16a34a' },
+    person: { id: 'p2', legal_name: 'joaquin manuel ramos carvallo', national_id: '08843906S', avatar_initials: 'JR', avatar_color: '#16a34a' },
     company_id: 'co1',
-    role: 'Camarero/a',
+    role: 'Sala',
     contracted_hours_week: 20,
     status: 'active',
-    center_id: 'c1',
+    center_id: 'c5',
   },
   {
     id: 'e3',
     person_id: 'p3',
-    person: { id: 'p3', legal_name: 'Ana Fernández Torres', national_id: '11223344C', avatar_initials: 'AF', avatar_color: '#d97706' },
+    person: { id: 'p3', legal_name: 'raimunda nonata silva lago', national_id: '31914822E', avatar_initials: 'RS', avatar_color: '#d97706' },
     company_id: 'co1',
-    role: 'Cocinero/a',
+    role: 'Cocina',
     contracted_hours_week: 32,
     status: 'active',
-    center_id: 'c1',
+    center_id: 'c5',
   },
   {
     id: 'e4',
     person_id: 'p4',
-    person: { id: 'p4', legal_name: 'David Sánchez Pérez', national_id: '55667788D', avatar_initials: 'DS', avatar_color: '#dc2626' },
+    person: { id: 'p4', legal_name: 'antonio mendes gonçalves', national_id: '55362330L', avatar_initials: 'AM', avatar_color: '#dc2626' },
     company_id: 'co1',
-    role: 'Ayudante cocina',
+    role: 'Cocina',
     contracted_hours_week: 10,
     status: 'active',
-    center_id: 'c1',
+    center_id: 'c5',
   },
   {
     id: 'e5',
     person_id: 'p5',
-    person: { id: 'p5', legal_name: 'Laura Moreno Díaz', national_id: '99001122E', avatar_initials: 'LM', avatar_color: '#7c3aed' },
+    person: { id: 'p5', legal_name: 'danielli simoes de oliveira', national_id: '31915927T', avatar_initials: 'DS', avatar_color: '#7c3aed' },
     company_id: 'co1',
-    role: 'Camarero/a',
+    role: 'Sala',
     contracted_hours_week: 20,
     status: 'active',
-    center_id: 'c2',
+    center_id: 'c5',
   },
   {
     id: 'e6',
     person_id: 'p6',
-    person: { id: 'p6', legal_name: 'Roberto Jiménez Gil', national_id: '33445566F', avatar_initials: 'RJ', avatar_color: '#0284c7' },
+    person: { id: 'p6', legal_name: 'abdoulaye drame', national_id: 'Y6894700G', avatar_initials: 'AD', avatar_color: '#0284c7' },
     company_id: 'co1',
-    role: 'Encargado/a',
+    role: 'Sala',
     contracted_hours_week: 40,
     status: 'active',
-    center_id: 'c2',
+    center_id: 'c5',
+  },
+  {
+    id: 'e7',
+    person_id: 'p7',
+    person: { id: 'p7', legal_name: 'hamza jahangir', national_id: 'Y3422743N', avatar_initials: 'HJ', avatar_color: '#be185d' },
+    company_id: 'co1',
+    role: 'Cocina',
+    contracted_hours_week: 40,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e8',
+    person_id: 'p8',
+    person: { id: 'p8', legal_name: 'nicole noemi de la rosa suero', national_id: '60314075W', avatar_initials: 'NR', avatar_color: '#0891b2' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e9',
+    person_id: 'p9',
+    person: { id: 'p9', legal_name: 'lamine sane', national_id: 'Y7422764B', avatar_initials: 'LS', avatar_color: '#65a30d' },
+    company_id: 'co1',
+    role: 'Cocina',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e10',
+    person_id: 'p10',
+    person: { id: 'p10', legal_name: 'jose carlos salinas bracesco', national_id: '60597265Q', avatar_initials: 'JS', avatar_color: '#9333ea' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 40,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e11',
+    person_id: 'p11',
+    person: { id: 'p11', legal_name: 'hamza souane sebari', national_id: '26592725X', avatar_initials: 'HS', avatar_color: '#ea580c' },
+    company_id: 'co1',
+    role: 'Cocina',
+    contracted_hours_week: 32,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e12',
+    person_id: 'p12',
+    person: { id: 'p12', legal_name: 'carlos arturo rendon ramirez', national_id: '18463060V', avatar_initials: 'CR', avatar_color: '#0d9488' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e13',
+    person_id: 'p13',
+    person: { id: 'p13', legal_name: 'sellam mouloulid', national_id: 'Y6788900G', avatar_initials: 'SM', avatar_color: '#6366f1' },
+    company_id: 'co1',
+    role: 'Mantenimiento',
+    contracted_hours_week: 40,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e14',
+    person_id: 'p14',
+    person: { id: 'p14', legal_name: 'ana isabel hernandez utrilla', national_id: '78090884L', avatar_initials: 'AH', avatar_color: '#b45309' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e15',
+    person_id: 'p15',
+    person: { id: 'p15', legal_name: 'israel flores mamani', national_id: '01884844V', avatar_initials: 'IF', avatar_color: '#1d4ed8' },
+    company_id: 'co1',
+    role: 'Cocina',
+    contracted_hours_week: 32,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e16',
+    person_id: 'p16',
+    person: { id: 'p16', legal_name: 'abrahan jose bastidas galeno', national_id: 'X3540073M', avatar_initials: 'AB', avatar_color: '#15803d' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e17',
+    person_id: 'p17',
+    person: { id: 'p17', legal_name: 'prueba justnet', national_id: 'X6928918F', avatar_initials: 'PJ', avatar_color: '#9f1239' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 40,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e18',
+    person_id: 'p18',
+    person: { id: 'p18', legal_name: 'fabio rejon casado', national_id: '52598639P', avatar_initials: 'FR', avatar_color: '#0369a1' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 40,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e19',
+    person_id: 'p19',
+    person: { id: 'p19', legal_name: 'kelly gonzalez murillo', national_id: '48234504P', avatar_initials: 'KG', avatar_color: '#7e22ce' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e20',
+    person_id: 'p20',
+    person: { id: 'p20', legal_name: 'danny mycol paredes becerra', national_id: 'Y8634974Y', avatar_initials: 'DP', avatar_color: '#c2410c' },
+    company_id: 'co1',
+    role: 'Cocina',
+    contracted_hours_week: 32,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e21',
+    person_id: 'p21',
+    person: { id: 'p21', legal_name: 'muhammad waqas rana', national_id: 'Y3569163Z', avatar_initials: 'MR', avatar_color: '#0f766e' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 40,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e22',
+    person_id: 'p22',
+    person: { id: 'p22', legal_name: 'abderrahim hazakhana', national_id: 'Y6052320E', avatar_initials: 'AZ', avatar_color: '#4338ca' },
+    company_id: 'co1',
+    role: 'Cocina',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e23',
+    person_id: 'p23',
+    person: { id: 'p23', legal_name: 'daniela dianelis methol carvajal', national_id: '46415975C', avatar_initials: 'DM', avatar_color: '#a16207' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e24',
+    person_id: 'p24',
+    person: { id: 'p24', legal_name: 'jainaba sise touray', national_id: '38887747Z', avatar_initials: 'JT', avatar_color: '#166534' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
+  },
+  {
+    id: 'e25',
+    person_id: 'p25',
+    person: { id: 'p25', legal_name: 'marilyn peralta lopez', national_id: 'Z1629866E', avatar_initials: 'MP', avatar_color: '#1e40af' },
+    company_id: 'co1',
+    role: 'Sala',
+    contracted_hours_week: 20,
+    status: 'active',
+    center_id: 'c5',
   },
 ]
 
 // Standard week templates per employment (day_of_week: 0=Mon … 6=Sun)
 export const MOCK_STANDARD_WEEKS: Record<string, StandardWeekShift[]> = {
-  // María García — 40h, full-time manager Mon–Fri 09:00–17:00
+  // marc hernandez geli — 40h, sala Mon–Fri 09:00–17:00
   e1: [
-    { day_of_week: 0, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
-    { day_of_week: 1, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
-    { day_of_week: 2, start_time: '12:00', end_time: '20:00', center_id: 'c1', role: 'Jefe de sala' },
-    { day_of_week: 3, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
-    { day_of_week: 4, start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala' },
+    { day_of_week: 0, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 1, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 2, start_time: '12:00', end_time: '20:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 3, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 4, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
   ],
-  // Ana Fernández — 32h, cocinera Mon–Thu 10:00–18:00
+  // raimunda nonata silva lago — 32h, cocina Mon–Thu 10:00–18:00
   e3: [
-    { day_of_week: 0, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
-    { day_of_week: 1, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
-    { day_of_week: 2, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
-    { day_of_week: 3, start_time: '10:00', end_time: '18:00', center_id: 'c1', role: 'Cocinero/a' },
+    { day_of_week: 0, start_time: '10:00', end_time: '18:00', center_id: 'c5', role: 'Cocina' },
+    { day_of_week: 1, start_time: '10:00', end_time: '18:00', center_id: 'c5', role: 'Cocina' },
+    { day_of_week: 2, start_time: '10:00', end_time: '18:00', center_id: 'c5', role: 'Cocina' },
+    { day_of_week: 3, start_time: '10:00', end_time: '18:00', center_id: 'c5', role: 'Cocina' },
   ],
-  // Laura Moreno — 20h, camarera Wed–Sat 15:00–20:00
+  // danielli simoes de oliveira — 20h, sala Mié–Sáb 15:00–20:00
   e5: [
-    { day_of_week: 2, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
-    { day_of_week: 3, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
-    { day_of_week: 4, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
-    { day_of_week: 5, start_time: '15:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a' },
+    { day_of_week: 2, start_time: '15:00', end_time: '20:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 3, start_time: '15:00', end_time: '20:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 4, start_time: '15:00', end_time: '20:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 5, start_time: '15:00', end_time: '20:00', center_id: 'c5', role: 'Sala' },
   ],
-  // Roberto Jiménez — 40h, encargado Mon–Fri 09:00–17:00
+  // abdoulaye drame — 40h, sala Mon–Fri 09:00–17:00
   e6: [
-    { day_of_week: 0, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
-    { day_of_week: 1, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
-    { day_of_week: 2, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
-    { day_of_week: 3, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
-    { day_of_week: 4, start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a' },
+    { day_of_week: 0, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 1, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 2, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 3, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
+    { day_of_week: 4, start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala' },
   ],
 }
 
 // Week of 2026-03-17 (Mon) to 2026-03-23 (Sun)
 export const MOCK_SHIFTS: Shift[] = [
-  // María García (40h contracted) — full-time manager
-  { id: 's1', employment_id: 'e1', date: '2026-03-17', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 8 },
-  { id: 's2', employment_id: 'e1', date: '2026-03-18', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 8 },
-  { id: 's3', employment_id: 'e1', date: '2026-03-19', start_time: '12:00', end_time: '20:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 8 },
-  { id: 's4', employment_id: 'e1', date: '2026-03-20', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 8 },
-  { id: 's5', employment_id: 'e1', date: '2026-03-21', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft', duration_hours: 8 },
+  // marc hernandez geli (40h contracted)
+  { id: 's1', employment_id: 'e1', date: '2026-03-17', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's2', employment_id: 'e1', date: '2026-03-18', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's3', employment_id: 'e1', date: '2026-03-19', start_time: '12:00', end_time: '20:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's4', employment_id: 'e1', date: '2026-03-20', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's5', employment_id: 'e1', date: '2026-03-21', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 8 },
 
-  // Carlos Ruiz (20h contracted) — VIOLATION: 32.5h planned
-  { id: 's6', employment_id: 'e2', date: '2026-03-17', start_time: '10:00', end_time: '16:30', center_id: 'c1', role: 'Camarero/a', status: 'draft', duration_hours: 6.5 },
-  { id: 's7', employment_id: 'e2', date: '2026-03-18', start_time: '10:00', end_time: '16:30', center_id: 'c1', role: 'Camarero/a', status: 'draft', duration_hours: 6.5 },
-  { id: 's8', employment_id: 'e2', date: '2026-03-19', start_time: '10:00', end_time: '16:30', center_id: 'c1', role: 'Camarero/a', status: 'draft', duration_hours: 6.5 },
-  { id: 's9', employment_id: 'e2', date: '2026-03-20', start_time: '10:00', end_time: '16:30', center_id: 'c1', role: 'Camarero/a', status: 'draft', duration_hours: 6.5 },
-  { id: 's10', employment_id: 'e2', date: '2026-03-21', start_time: '10:00', end_time: '16:30', center_id: 'c1', role: 'Camarero/a', status: 'draft', duration_hours: 6.5 },
+  // joaquin manuel ramos carvallo (20h contracted) — VIOLATION: 32.5h planned
+  { id: 's6', employment_id: 'e2', date: '2026-03-17', start_time: '10:00', end_time: '16:30', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 6.5 },
+  { id: 's7', employment_id: 'e2', date: '2026-03-18', start_time: '10:00', end_time: '16:30', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 6.5 },
+  { id: 's8', employment_id: 'e2', date: '2026-03-19', start_time: '10:00', end_time: '16:30', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 6.5 },
+  { id: 's9', employment_id: 'e2', date: '2026-03-20', start_time: '10:00', end_time: '16:30', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 6.5 },
+  { id: 's10', employment_id: 'e2', date: '2026-03-21', start_time: '10:00', end_time: '16:30', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 6.5 },
 
-  // Ana Fernández (32h contracted) — split shift on Monday (turno partido)
-  { id: 's11', employment_id: 'e3', date: '2026-03-17', start_time: '08:00', end_time: '14:00', center_id: 'c1', role: 'Cocinero/a', status: 'published', duration_hours: 6 },
-  { id: 's11b', employment_id: 'e3', date: '2026-03-17', start_time: '17:30', end_time: '21:00', center_id: 'c1', role: 'Cocinero/a', status: 'published', duration_hours: 3.5 },
-  { id: 's12', employment_id: 'e3', date: '2026-03-18', start_time: '08:00', end_time: '16:00', center_id: 'c1', role: 'Cocinero/a', status: 'published', duration_hours: 8 },
-  { id: 's13', employment_id: 'e3', date: '2026-03-20', start_time: '08:00', end_time: '14:00', center_id: 'c1', role: 'Cocinero/a', status: 'draft', duration_hours: 6 },
-  { id: 's13b', employment_id: 'e3', date: '2026-03-20', start_time: '18:00', end_time: '22:00', center_id: 'c1', role: 'Cocinero/a', status: 'draft', duration_hours: 4 },
-  { id: 's14', employment_id: 'e3', date: '2026-03-21', start_time: '08:00', end_time: '14:00', center_id: 'c1', role: 'Cocinero/a', status: 'draft', duration_hours: 6 },
+  // raimunda nonata silva lago (32h contracted) — split shift on Monday (turno partido)
+  { id: 's11', employment_id: 'e3', date: '2026-03-17', start_time: '08:00', end_time: '14:00', center_id: 'c5', role: 'Cocina', status: 'published', duration_hours: 6 },
+  { id: 's11b', employment_id: 'e3', date: '2026-03-17', start_time: '17:30', end_time: '21:00', center_id: 'c5', role: 'Cocina', status: 'published', duration_hours: 3.5 },
+  { id: 's12', employment_id: 'e3', date: '2026-03-18', start_time: '08:00', end_time: '16:00', center_id: 'c5', role: 'Cocina', status: 'published', duration_hours: 8 },
+  { id: 's13', employment_id: 'e3', date: '2026-03-20', start_time: '08:00', end_time: '14:00', center_id: 'c5', role: 'Cocina', status: 'draft', duration_hours: 6 },
+  { id: 's13b', employment_id: 'e3', date: '2026-03-20', start_time: '18:00', end_time: '22:00', center_id: 'c5', role: 'Cocina', status: 'draft', duration_hours: 4 },
+  { id: 's14', employment_id: 'e3', date: '2026-03-21', start_time: '08:00', end_time: '14:00', center_id: 'c5', role: 'Cocina', status: 'draft', duration_hours: 6 },
 
-  // David Sánchez (10h contracted) — VIOLATION: rest gap warning on Wed→Thu
-  { id: 's15', employment_id: 'e4', date: '2026-03-18', start_time: '20:00', end_time: '01:00', center_id: 'c1', role: 'Ayudante cocina', status: 'draft', duration_hours: 5 },
-  { id: 's16', employment_id: 'e4', date: '2026-03-19', start_time: '07:00', end_time: '12:00', center_id: 'c1', role: 'Ayudante cocina', status: 'draft', duration_hours: 5 },
+  // antonio mendes gonçalves (10h contracted) — VIOLATION: rest gap warning on Wed→Thu
+  { id: 's15', employment_id: 'e4', date: '2026-03-18', start_time: '20:00', end_time: '01:00', center_id: 'c5', role: 'Cocina', status: 'draft', duration_hours: 5 },
+  { id: 's16', employment_id: 'e4', date: '2026-03-19', start_time: '07:00', end_time: '12:00', center_id: 'c5', role: 'Cocina', status: 'draft', duration_hours: 5 },
 
-  // Laura Moreno (20h contracted) — holiday on Friday (INFO)
-  { id: 's17', employment_id: 'e5', date: '2026-03-17', start_time: '12:00', end_time: '20:00', center_id: 'c2', role: 'Camarero/a', status: 'published', duration_hours: 8 },
-  { id: 's18', employment_id: 'e5', date: '2026-03-18', start_time: '12:00', end_time: '18:00', center_id: 'c2', role: 'Camarero/a', status: 'published', duration_hours: 6 },
-  { id: 's19', employment_id: 'e5', date: '2026-03-21', start_time: '10:00', end_time: '16:00', center_id: 'c2', role: 'Camarero/a', status: 'draft', duration_hours: 6 },
+  // danielli simoes de oliveira (20h contracted) — holiday on Friday (INFO)
+  { id: 's17', employment_id: 'e5', date: '2026-03-17', start_time: '12:00', end_time: '20:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's18', employment_id: 'e5', date: '2026-03-18', start_time: '12:00', end_time: '18:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 6 },
+  { id: 's19', employment_id: 'e5', date: '2026-03-21', start_time: '10:00', end_time: '16:00', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 6 },
 
-  // Roberto Jiménez (40h contracted)
-  { id: 's20', employment_id: 'e6', date: '2026-03-17', start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a', status: 'published', duration_hours: 8 },
-  { id: 's21', employment_id: 'e6', date: '2026-03-18', start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a', status: 'published', duration_hours: 8 },
-  { id: 's22', employment_id: 'e6', date: '2026-03-19', start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a', status: 'published', duration_hours: 8 },
-  { id: 's23', employment_id: 'e6', date: '2026-03-20', start_time: '09:00', end_time: '17:00', center_id: 'c2', role: 'Encargado/a', status: 'draft', duration_hours: 8 },
-  { id: 's24', employment_id: 'e6', date: '2026-03-21', start_time: '09:00', end_time: '13:00', center_id: 'c2', role: 'Encargado/a', status: 'draft', duration_hours: 4 },
+  // abdoulaye drame (40h contracted)
+  { id: 's20', employment_id: 'e6', date: '2026-03-17', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's21', employment_id: 'e6', date: '2026-03-18', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's22', employment_id: 'e6', date: '2026-03-19', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'published', duration_hours: 8 },
+  { id: 's23', employment_id: 'e6', date: '2026-03-20', start_time: '09:00', end_time: '17:00', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 8 },
+  { id: 's24', employment_id: 'e6', date: '2026-03-21', start_time: '09:00', end_time: '13:00', center_id: 'c5', role: 'Sala', status: 'draft', duration_hours: 4 },
 ]
 
 export const MOCK_VIOLATIONS: ValidationViolation[] = [
@@ -382,3 +577,60 @@ export const MOCK_CLOSURE_PERIOD: ClosurePeriod = {
     },
   ],
 }
+
+// ─── Employee Portal — María García (e1) demo data ────────────────────────────
+// Covers 4 weeks for the schedule view: -1 week past, current week, +2 future
+
+export const PORTAL_EMPLOYMENT_ID = 'e1'
+
+// Extra shifts for weeks outside the planning mock (e1 only)
+export const PORTAL_EXTRA_SHIFTS: Shift[] = [
+  // Week 2026-03-10 (prev week) — Mon–Fri 09:00–17:00
+  { id: 'pe1',  employment_id: 'e1', date: '2026-03-10', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'locked',    duration_hours: 8 },
+  { id: 'pe2',  employment_id: 'e1', date: '2026-03-11', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'locked',    duration_hours: 8 },
+  { id: 'pe3',  employment_id: 'e1', date: '2026-03-12', start_time: '12:00', end_time: '20:00', center_id: 'c1', role: 'Jefe de sala', status: 'locked',    duration_hours: 8 },
+  { id: 'pe4',  employment_id: 'e1', date: '2026-03-13', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'locked',    duration_hours: 8 },
+  { id: 'pe5',  employment_id: 'e1', date: '2026-03-14', start_time: '09:00', end_time: '13:00', center_id: 'c1', role: 'Jefe de sala', status: 'locked',    duration_hours: 4 },
+  // Week 2026-03-24 (next week) — Mon turno partido, rest standard
+  { id: 'pe6',   employment_id: 'e1', date: '2026-03-24', start_time: '09:00', end_time: '14:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 5 },
+  { id: 'pe6b',  employment_id: 'e1', date: '2026-03-24', start_time: '20:00', end_time: '23:00', center_id: 'c2', role: 'Jefe de sala', status: 'published', duration_hours: 3 },
+  { id: 'pe7',   employment_id: 'e1', date: '2026-03-25', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 8 },
+  { id: 'pe8',   employment_id: 'e1', date: '2026-03-26', start_time: '11:00', end_time: '19:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 8 },
+  { id: 'pe9',   employment_id: 'e1', date: '2026-03-27', start_time: '09:00', end_time: '14:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 5 },
+  { id: 'pe9b',  employment_id: 'e1', date: '2026-03-27', start_time: '19:00', end_time: '23:00', center_id: 'c1', role: 'Jefe de sala', status: 'published', duration_hours: 4 },
+  { id: 'pe10',  employment_id: 'e1', date: '2026-03-28', start_time: '09:00', end_time: '13:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft',     duration_hours: 4 },
+  // Week 2026-03-31 (week after next)
+  { id: 'pe11', employment_id: 'e1', date: '2026-03-31', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft',     duration_hours: 8 },
+  { id: 'pe12', employment_id: 'e1', date: '2026-04-01', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft',     duration_hours: 8 },
+  { id: 'pe13', employment_id: 'e1', date: '2026-04-02', start_time: '12:00', end_time: '20:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft',     duration_hours: 8 },
+  { id: 'pe14', employment_id: 'e1', date: '2026-04-03', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft',     duration_hours: 8 },
+  { id: 'pe15', employment_id: 'e1', date: '2026-04-04', start_time: '09:00', end_time: '17:00', center_id: 'c1', role: 'Jefe de sala', status: 'draft',     duration_hours: 8 },
+]
+
+// Time entries for history: past 2 weeks for e1
+export const PORTAL_TIME_ENTRIES: TimeEntry[] = [
+  // Week 2026-03-10
+  { id: 'ph1',  employment_id: 'e1', date: '2026-03-10', timestamp: '09:02', type: 'in',  source: 'kiosk'  },
+  { id: 'ph2',  employment_id: 'e1', date: '2026-03-10', timestamp: '13:01', type: 'break_start', source: 'kiosk' },
+  { id: 'ph3',  employment_id: 'e1', date: '2026-03-10', timestamp: '14:00', type: 'break_end',   source: 'kiosk' },
+  { id: 'ph4',  employment_id: 'e1', date: '2026-03-10', timestamp: '17:04', type: 'out', source: 'kiosk'  },
+  { id: 'ph5',  employment_id: 'e1', date: '2026-03-11', timestamp: '08:58', type: 'in',  source: 'kiosk'  },
+  { id: 'ph6',  employment_id: 'e1', date: '2026-03-11', timestamp: '17:00', type: 'out', source: 'kiosk'  },
+  { id: 'ph7',  employment_id: 'e1', date: '2026-03-12', timestamp: '12:00', type: 'in',  source: 'mobile' },
+  { id: 'ph8',  employment_id: 'e1', date: '2026-03-12', timestamp: '20:03', type: 'out', source: 'mobile' },
+  { id: 'ph9',  employment_id: 'e1', date: '2026-03-13', timestamp: '09:10', type: 'in',  source: 'kiosk'  },
+  { id: 'ph10', employment_id: 'e1', date: '2026-03-13', timestamp: '17:06', type: 'out', source: 'kiosk'  },
+  { id: 'ph11', employment_id: 'e1', date: '2026-03-14', timestamp: '09:00', type: 'in',  source: 'kiosk'  },
+  { id: 'ph12', employment_id: 'e1', date: '2026-03-14', timestamp: '13:02', type: 'out', source: 'kiosk'  },
+  // Week 2026-03-17 (reuse MOCK_TIME_ENTRIES for e1: te1+te2, te17+te18)
+  // Already in MOCK_TIME_ENTRIES — combined at portal level
+]
+
+// WorkDays for portal history (e1, prev week)
+export const PORTAL_WORK_DAYS: WorkDay[] = [
+  { id: 'pwd1', employment_id: 'e1', date: '2026-03-10', planned_hours: 8,   actual_hours: 8.03, deviation_hours:  0.03, incident_count: 0, status: 'approved' },
+  { id: 'pwd2', employment_id: 'e1', date: '2026-03-11', planned_hours: 8,   actual_hours: 8.03, deviation_hours:  0.03, incident_count: 0, status: 'approved' },
+  { id: 'pwd3', employment_id: 'e1', date: '2026-03-12', planned_hours: 8,   actual_hours: 8.05, deviation_hours:  0.05, incident_count: 0, status: 'approved' },
+  { id: 'pwd4', employment_id: 'e1', date: '2026-03-13', planned_hours: 8,   actual_hours: 7.93, deviation_hours: -0.07, incident_count: 0, status: 'approved' },
+  { id: 'pwd5', employment_id: 'e1', date: '2026-03-14', planned_hours: 4,   actual_hours: 4.03, deviation_hours:  0.03, incident_count: 0, status: 'approved' },
+]
