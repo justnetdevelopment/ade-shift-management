@@ -1,8 +1,8 @@
-import { ChevronLeft, ChevronRight, Copy, Send, ChevronDown } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Copy, Send, ChevronDown, CalendarDays, LayoutTemplate } from 'lucide-react'
 import { format, addWeeks, subWeeks, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Badge } from './Badge'
-import type { PlanningStatus, WeekRange } from '../types'
+import type { PlanningStatus, WeekRange, ViewMode } from '../types'
 import { MOCK_CENTERS, MOCK_ROLES } from '../mock-data'
 
 interface PlanningToolbarProps {
@@ -10,9 +10,11 @@ interface PlanningToolbarProps {
   planningStatus: PlanningStatus
   activeCenter: string | null
   activeRole: string | null
+  viewMode: ViewMode
   onWeekChange: (week: WeekRange) => void
   onCenterChange: (centerId: string | null) => void
   onRoleChange: (role: string | null) => void
+  onViewModeChange: (mode: ViewMode) => void
   onPublish: () => void
   onCopyPreviousWeek: () => void
 }
@@ -35,9 +37,11 @@ export function PlanningToolbar({
   planningStatus,
   activeCenter,
   activeRole,
+  viewMode,
   onWeekChange,
   onCenterChange,
   onRoleChange,
+  onViewModeChange,
   onPublish,
   onCopyPreviousWeek,
 }: PlanningToolbarProps) {
@@ -110,6 +114,34 @@ export function PlanningToolbar({
             </select>
             <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-neutral-400 pointer-events-none" />
           </div>
+        </div>
+
+        {/* View mode toggle */}
+        <div className="flex items-center bg-neutral-100 rounded-lg p-0.5 gap-0.5">
+          <button
+            onClick={() => onViewModeChange('weekly')}
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              viewMode === 'weekly'
+                ? 'bg-white text-neutral-900 shadow-card'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
+            title="Vista semanal"
+          >
+            <CalendarDays className="w-3.5 h-3.5" />
+            Semana
+          </button>
+          <button
+            onClick={() => onViewModeChange('gantt')}
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              viewMode === 'gantt'
+                ? 'bg-white text-neutral-900 shadow-card'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
+            title="Vista Gantt horaria"
+          >
+            <LayoutTemplate className="w-3.5 h-3.5" />
+            Gantt
+          </button>
         </div>
 
         {/* Status + actions */}

@@ -83,6 +83,73 @@ export interface StandardWeekShift {
   role: string
 }
 
+// ─── Gantt / Hourly Planning Types ────────────────────────────────────────────
+
+export type ViewMode = 'weekly' | 'gantt'
+
+export type AbsenceType = 'vacation' | 'sick_leave' | 'personal' | 'justified' | 'unjustified'
+
+export interface Absence {
+  id: string
+  employment_id: string
+  type: AbsenceType
+  label: string          // display name in Spanish
+  start_date: string     // 'YYYY-MM-DD'
+  end_date: string
+  status: 'requested' | 'approved' | 'rejected'
+  reason?: string
+  blocks_planning: boolean
+}
+
+export interface EmployeeCost {
+  employment_id: string
+  hourly_rate: number       // gross €/hour
+  ss_rate: number           // employer SS contribution rate, e.g. 0.298
+  overtime_mult: number     // e.g. 1.25
+  night_mult: number        // e.g. 1.25
+  night_start: string       // 'HH:mm' when night shift starts, e.g. '22:00'
+  night_end: string         // 'HH:mm' when night shift ends, e.g. '06:00'
+}
+
+export interface RevenueDaily {
+  center_id: string
+  date: string               // 'YYYY-MM-DD'
+  revenue_actual: number | null
+  revenue_estimated: number
+  covers: number | null
+  source: 'manual' | 'revo_api' | 'estimate'
+  target_labor_ratio: number  // e.g. 0.15 = 15%
+}
+
+export interface CostSummaryPerEmployee {
+  employment_id: string
+  planned_hours: number
+  extra_hours: number
+  cost_fixed: number
+  cost_extra: number
+  cost_total: number
+}
+
+export interface CostSummary {
+  fixed_cost: number
+  extra_cost: number
+  total_cost: number
+  revenue_actual: number | null
+  revenue_estimated: number
+  labor_ratio: number
+  target_ratio: number
+  deviation: number       // labor_ratio - target_ratio (positive = over budget)
+  revenue_source: RevenueDaily['source']
+  per_employment: CostSummaryPerEmployee[]
+}
+
+export interface CoverageSlot {
+  slot_start: string     // 'HH:mm'
+  slot_end: string       // 'HH:mm'
+  count: number          // total active employees
+  by_role: Record<string, number>
+}
+
 // ─── App Routing ───────────────────────────────────────────────────────────────
 
 export type AppPage =

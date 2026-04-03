@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { X, SlidersHorizontal, Sunrise, Sun, Sunset, Moon } from 'lucide-react'
-import type { Employment } from '../types'
+import { X, SlidersHorizontal, Sunrise, Sun, Sunset, Moon, Palmtree, UserX, Briefcase, FileX } from 'lucide-react'
+import type { Employment, AbsenceType } from '../types'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -9,7 +9,14 @@ const PRESETS = [
   { label: 'Mañana',  Icon: Sunrise, start: '07:00', end: '15:00' },
   { label: 'Jornada', Icon: Sun,     start: '09:00', end: '17:00' },
   { label: 'Tarde',   Icon: Sunset,  start: '15:00', end: '23:00' },
-  { label: 'Noche',   Icon: Moon,    start: '22:00', end: '06:00' },
+  { label: 'Noche',   Icon: Moon,    start: '22:00', end: '03:00' },
+]
+
+const ABSENCE_PRESETS: { label: string; type: AbsenceType; Icon: React.ElementType; color: string }[] = [
+  { label: 'Vacaciones',     type: 'vacation',     Icon: Palmtree,  color: 'text-info-600 group-hover:text-info-700'    },
+  { label: 'Asunto propio',  type: 'personal',     Icon: Briefcase, color: 'text-shift-600 group-hover:text-shift-700'  },
+  { label: 'Baja médica',    type: 'sick_leave',   Icon: UserX,     color: 'text-error-600 group-hover:text-error-700'  },
+  { label: 'Justificada',    type: 'justified',    Icon: FileX,     color: 'text-warning-600 group-hover:text-warning-700' },
 ]
 
 interface QuickAddPopoverProps {
@@ -17,18 +24,20 @@ interface QuickAddPopoverProps {
   date: string
   cellRect: DOMRect
   onPreset: (startTime: string, endTime: string) => void
+  onAbsence: (type: AbsenceType) => void
   onCustomize: () => void
   onClose: () => void
 }
 
 const POPOVER_WIDTH = 228
-const POPOVER_HEIGHT = 230
+const POPOVER_HEIGHT = 320
 
 export function QuickAddPopover({
   employment,
   date,
   cellRect,
   onPreset,
+  onAbsence,
   onCustomize,
   onClose,
 }: QuickAddPopoverProps) {
@@ -110,6 +119,23 @@ export function QuickAddPopover({
         <SlidersHorizontal className="w-3.5 h-3.5" />
         Personalizar horario
       </button>
+
+      <div className="border-t border-neutral-100 my-1.5" />
+
+      {/* Absence options */}
+      <p className="px-2 pb-1 text-2xs font-semibold text-neutral-400 uppercase tracking-wide">Ausencia</p>
+      <div className="grid grid-cols-2 gap-1">
+        {ABSENCE_PRESETS.map(({ label, type, Icon, color }) => (
+          <button
+            key={type}
+            onClick={() => onAbsence(type)}
+            className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-neutral-100 active:bg-neutral-150 transition-colors text-left group"
+          >
+            <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${color}`} />
+            <span className="text-xs text-neutral-700 group-hover:text-neutral-900 leading-tight">{label}</span>
+          </button>
+        ))}
+      </div>
     </div>,
     document.body,
   )

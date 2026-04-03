@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Trash2, AlertCircle, AlertTriangle, Info, Clock, ChevronUp, ChevronDown, Sunrise, Sun, Sunset, Moon } from 'lucide-react'
 import type { Employment, Shift, ValidationViolation } from '../types'
-import { MOCK_CENTERS, MOCK_ROLES } from '../mock-data'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { TimeSlider } from './TimeSlider'
