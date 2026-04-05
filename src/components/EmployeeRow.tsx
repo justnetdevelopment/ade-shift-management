@@ -1,4 +1,4 @@
-import type { Employment, Shift, ValidationViolation } from '../types'
+import type { Employment, Shift, ValidationViolation, Absence } from '../types'
 import { ShiftCell } from './ShiftCell'
 import { CalendarClock } from 'lucide-react'
 import { format } from 'date-fns'
@@ -9,12 +9,14 @@ interface EmployeeRowProps {
   weekDays: Date[]
   shifts: Shift[]
   violations: ValidationViolation[]
+  absencesByDate: Map<string, Absence>
   planningStatus: string
   totalHours: number
   contractedHours: number
   hasStandardWeek: boolean
   onApplyStandardWeek: () => void
   onCellClick: (employment: Employment, date: string, shift: Shift | null, cellRect?: DOMRect) => void
+  onAbsenceClick: (absence: Absence, employment: Employment) => void
 }
 
 function getWeekHours(shifts: Shift[]): number {
@@ -33,12 +35,14 @@ export function EmployeeRow({
   weekDays,
   shifts,
   violations,
+  absencesByDate,
   planningStatus,
   totalHours,
   contractedHours,
   hasStandardWeek,
   onApplyStandardWeek,
   onCellClick,
+  onAbsenceClick,
 }: EmployeeRowProps) {
   const weekHours = getWeekHours(shifts)
   const isLocked = planningStatus === 'locked'
@@ -104,6 +108,7 @@ export function EmployeeRow({
           const dayShifts = shiftsByDate.get(dateStr) ?? []
           const dayViolations = violationsByDate.get(dateStr) ?? []
           const isHoliday = PUBLIC_HOLIDAYS.includes(dateStr)
+          const absence = absencesByDate.get(dateStr) ?? null
 
           return (
             <ShiftCell
@@ -112,9 +117,11 @@ export function EmployeeRow({
               date={dateStr}
               shifts={dayShifts}
               violations={dayViolations}
+              absence={absence}
               isHoliday={isHoliday}
               isLocked={isLocked}
               onClick={(shift, cellRect) => onCellClick(employment, dateStr, shift, cellRect)}
+              onAbsenceClick={(abs) => onAbsenceClick(abs, employment)}
             />
           )
         })}

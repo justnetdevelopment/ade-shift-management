@@ -15,6 +15,9 @@ import {
   EMP_COL_PX,
   TOTAL_COL_PX,
   ROW_HEIGHT_PX,
+  GRID_START_MIN,
+  GRID_END_MIN,
+  minToTime,
 } from './useGanttLayout'
 
 interface GanttGridProps {
@@ -32,6 +35,8 @@ interface GanttGridProps {
   onEmptyCellClick: (employment: Employment, date: string, timeHint: string, rect: DOMRect) => void
   onApplyStandardDay: (employmentId: string, date: string) => void
   onReorder: (newIds: string[]) => void
+  onAbsenceClick: (absence: Absence, employment: Employment) => void
+  onShiftDraw: (employment: Employment, date: string, startTime: string, endTime: string) => void
 }
 
 interface DragState {
@@ -41,6 +46,13 @@ interface DragState {
   originalStartMin: number
   originalEndMin:   number
   mode:             DragMode
+}
+
+interface DrawState {
+  employment:  Employment
+  date:        string
+  startMin:    number
+  currentMin:  number
 }
 
 export function GanttGrid({
@@ -58,6 +70,8 @@ export function GanttGrid({
   onEmptyCellClick,
   onApplyStandardDay,
   onReorder,
+  onAbsenceClick,
+  onShiftDraw,
 }: GanttGridProps) {
   const scrollRef     = useRef<HTMLDivElement>(null)
   const headerSlotsRef = useRef<HTMLDivElement>(null)
@@ -66,6 +80,9 @@ export function GanttGrid({
   const [dragState,    setDragState]    = useState<DragState | null>(null)
   const [dragOffsetMin, setDragOffsetMin] = useState(0)
   const didDragRef = useRef(false)
+
+  // ── Draw-to-create state ──────────────────────────────────────────────────────
+  const [drawState, setDrawState] = useState<DrawState | null>(null)
 
   // ── Row reorder drag ─────────────────────────────────────────────────────────
   const [rowDragEmpId,  setRowDragEmpId]  = useState<string | null>(null)
@@ -149,12 +166,61 @@ export function GanttGrid({
     }
   }, [rowDragEmpId, rowDropIndex, employments, onReorder])
 
+  // ── Draw-to-create effect ────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!drawState) return
+
+    function onMouseMove(e: MouseEvent) {
+      if (!scrollRef.current) return
+      const rect = scrollRef.current.getBoundingClientRect()
+      const slotsWidth = rect.width - EMP_COL_PX - TOTAL_COL_PX
+      const relX = e.clientX - rect.left - EMP_COL_PX
+      const rawMin = GRID_START_MIN + (relX / slotsWidth) * TOTAL_MIN
+      const snapped = Math.round(rawMin / INTERVAL_MIN) * INTERVAL_MIN
+      const clamped = Math.max(GRID_START_MIN, Math.min(GRID_END_MIN, snapped))
+      setDrawState(prev => prev ? { ...prev, currentMin: clamped } : null)
+    }
+
+    function onMouseUp(e: MouseEvent) {
+      if (!drawState) return
+      const effectiveStart = Math.min(drawState.startMin, drawState.currentMin)
+      const effectiveEnd   = Math.max(drawState.startMin, drawState.currentMin)
+      const draggedMinutes = effectiveEnd - effectiveStart
+
+      if (draggedMinutes >= INTERVAL_MIN) {
+        // Large enough drag → create shift directly
+        onShiftDraw(drawState.employment, drawState.date, minToTime(effectiveStart), minToTime(effectiveEnd))
+      } else {
+        // Small drag / click → open popover
+        const timeHint = minToTime(drawState.startMin)
+        const rect = new DOMRect(e.clientX - 120, e.clientY + 4, 240, 1)
+        onEmptyCellClick(drawState.employment, drawState.date, timeHint, rect)
+      }
+      setDrawState(null)
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup',   onMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup',   onMouseUp)
+    }
+  }, [drawState, onShiftDraw, onEmptyCellClick])
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
   function handleRowDragStart(e: React.MouseEvent, empId: string) {
     e.preventDefault()
     setRowDragEmpId(empId)
     setRowDropIndex(employments.findIndex(emp => emp.id === empId))
+  }
+
+  function handleDrawStart(e: React.MouseEvent, employment: Employment, _date: string, rawMin: number) {
+    if (isLocked) return
+    e.preventDefault()
+    const snapped = Math.round(rawMin / INTERVAL_MIN) * INTERVAL_MIN
+    const clamped = Math.max(GRID_START_MIN, Math.min(GRID_END_MIN, snapped))
+    setDrawState({ employment, date: _date, startMin: clamped, currentMin: clamped })
   }
 
   function handleShiftMouseDown(e: React.MouseEvent, shift: Shift, mode: DragMode) {
@@ -219,7 +285,7 @@ export function GanttGrid({
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex-1 overflow-auto"
-        style={{ cursor: dragState || rowDragEmpId ? 'grabbing' : undefined }}
+        style={{ cursor: dragState || rowDragEmpId ? 'grabbing' : drawState ? 'crosshair' : undefined }}
       >
         <div className="w-full">
           {employments.map((emp, index) => {
@@ -244,11 +310,14 @@ export function GanttGrid({
                 dragMode={dragState?.mode ?? 'move'}
                 dragOffsetMin={dragOffsetMin}
                 standardDayTemplate={standardDayTemplate}
+                drawPreview={drawState?.employment.id === emp.id ? drawState : null}
                 onShiftClick={handleShiftClick}
                 onShiftMouseDown={handleShiftMouseDown}
                 onEmptyClick={handleEmptyClick}
+                onDrawStart={handleDrawStart}
                 onApplyStandardDay={() => onApplyStandardDay(emp.id, date)}
                 onRowDragStart={handleRowDragStart}
+                onAbsenceClick={onAbsenceClick}
               />
             )
           })}

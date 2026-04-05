@@ -32,6 +32,8 @@ interface GanttPlanningViewProps {
   onShiftUpdate:     (shiftId: string, newStart: string, newEnd: string) => void
   onEmptyCellClick:  (employment: Employment, date: string, timeHint: string, rect: DOMRect) => void
   onApplyStandardDay:(employmentId: string, date: string) => void
+  onAbsenceClick:    (absence: Absence, employment: Employment) => void
+  onShiftDraw:       (employment: Employment, date: string, startTime: string, endTime: string) => void
 }
 
 // ─── Cost calculation ──────────────────────────────────────────────────────────
@@ -114,6 +116,8 @@ export function GanttPlanningView({
   onShiftUpdate,
   onEmptyCellClick,
   onApplyStandardDay,
+  onAbsenceClick,
+  onShiftDraw,
 }: GanttPlanningViewProps) {
   const [selectedDate, setSelectedDate] = useState(
     format(weekRange.start, 'yyyy-MM-dd')
@@ -224,6 +228,8 @@ export function GanttPlanningView({
           onEmptyCellClick={onEmptyCellClick}
           onApplyStandardDay={onApplyStandardDay}
           onReorder={handleReorder}
+          onAbsenceClick={onAbsenceClick}
+          onShiftDraw={onShiftDraw}
         />
       )}
     </div>

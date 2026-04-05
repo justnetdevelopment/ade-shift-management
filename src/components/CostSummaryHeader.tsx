@@ -52,9 +52,9 @@ export function CostSummaryHeader({ summary, dateLabel }: CostSummaryHeaderProps
     <div className="flex-shrink-0 bg-white border-b border-neutral-200">
       <div className="flex items-stretch divide-x divide-neutral-150 h-[52px]">
 
-        {/* Date label */}
-        <div className="flex items-center px-3 flex-shrink-0">
-          <span className="text-2xs font-semibold text-neutral-400 uppercase tracking-wide whitespace-nowrap">
+        {/* Date label — same width as employee column so KPIs align with the grid */}
+        <div className="w-48 flex-shrink-0 flex items-center px-3">
+          <span className="text-2xs font-semibold text-neutral-400 uppercase tracking-wide whitespace-nowrap truncate">
             {dateLabel}
           </span>
         </div>

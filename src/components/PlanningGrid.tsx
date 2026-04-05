@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { format, isToday, isWeekend, startOfMonth, endOfMonth, getDaysInMonth } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { CalendarDays, Users, Clock } from 'lucide-react'
-import type { Employment, Shift, ValidationViolation, PlanningStatus, WeekRange, StandardWeekShift } from '../types'
+import type { Employment, Shift, ValidationViolation, PlanningStatus, WeekRange, StandardWeekShift, Absence } from '../types'
 import { EmployeeRow } from './EmployeeRow'
 import { PUBLIC_HOLIDAYS } from '../mock-data'
 
@@ -15,10 +15,12 @@ interface PlanningGridProps {
   shifts: Shift[]          // current week only (for the grid cells)
   allShifts: Shift[]       // all shifts — used for monthly totals
   violations: ValidationViolation[]
+  absences: Absence[]
   planningStatus: PlanningStatus
   standardWeeks: Record<string, StandardWeekShift[]>
   onApplyStandardWeek: (employmentId: string) => void
   onCellClick: (employment: Employment, date: string, shift: Shift | null, cellRect?: DOMRect) => void
+  onAbsenceClick: (absence: Absence, employment: Employment) => void
 }
 
 const DAY_ABBR: Record<string, string> = {
@@ -38,10 +40,12 @@ export function PlanningGrid({
   shifts,
   allShifts,
   violations,
+  absences,
   planningStatus,
   standardWeeks,
   onApplyStandardWeek,
   onCellClick,
+  onAbsenceClick,
 }: PlanningGridProps) {
   const [totalMode, setTotalMode] = useState<TotalMode>('week')
 
@@ -174,6 +178,21 @@ export function PlanningGrid({
           const employmentShifts = shifts.filter(s => s.employment_id === employment.id)
           const employmentViolations = violations.filter(v => v.employment_id === employment.id)
 
+          // Build absencesByDate map for this employee (only approved, within this week)
+          const weekStart = format(weekRange.start, 'yyyy-MM-dd')
+          const weekEnd   = format(weekRange.end,   'yyyy-MM-dd')
+          const absencesByDate = new Map<string, Absence>()
+          for (const abs of absences) {
+            if (abs.employment_id !== employment.id) continue
+            if (abs.status !== 'approved') continue
+            for (const day of weekDays) {
+              const d = format(day, 'yyyy-MM-dd')
+              if (abs.start_date <= d && abs.end_date >= d && d >= weekStart && d <= weekEnd) {
+                absencesByDate.set(d, abs)
+              }
+            }
+          }
+
           return (
             <EmployeeRow
               key={employment.id}
@@ -181,12 +200,14 @@ export function PlanningGrid({
               weekDays={weekDays}
               shifts={employmentShifts}
               violations={employmentViolations}
+              absencesByDate={absencesByDate}
               planningStatus={planningStatus}
               totalHours={getTotalHours(employment)}
               contractedHours={getContractedHours(employment)}
               hasStandardWeek={(standardWeeks[employment.id]?.length ?? 0) > 0}
               onApplyStandardWeek={() => onApplyStandardWeek(employment.id)}
               onCellClick={onCellClick}
+              onAbsenceClick={onAbsenceClick}
             />
           )
         })}

@@ -1,6 +1,5 @@
 import { format, isToday, isWeekend } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { PUBLIC_HOLIDAYS } from '../../mock-data'
 
 interface DaySelectorProps {
   weekDays: Date[]
@@ -29,7 +28,6 @@ export function DaySelector({ weekDays, selectedDate, onSelectDate }: DaySelecto
           const selected = dateStr === selectedDate
           const today    = isToday(day)
           const weekend  = isWeekend(day)
-          const holiday  = PUBLIC_HOLIDAYS.includes(dateStr)
 
           return (
             <button
@@ -44,26 +42,21 @@ export function DaySelector({ weekDays, selectedDate, onSelectDate }: DaySelecto
               }`}
             >
               <span className={`text-2xs font-semibold uppercase tracking-wide ${
-                selected         ? 'text-white/80'  :
-                today            ? 'text-shift-600' :
-                weekend || holiday ? 'text-neutral-400' :
+                selected  ? 'text-white/80'  :
+                today     ? 'text-shift-600' :
+                weekend   ? 'text-neutral-400' :
                 'text-neutral-500'
               }`}>
                 {abbr}
               </span>
               <span className={`text-sm font-bold tabular-nums ${
-                selected         ? 'text-white'     :
-                today            ? 'text-shift-700' :
-                weekend || holiday ? 'text-neutral-400' :
+                selected  ? 'text-white'     :
+                today     ? 'text-shift-700' :
+                weekend   ? 'text-neutral-400' :
                 'text-neutral-800'
               }`}>
                 {dayNum}
               </span>
-              {holiday && (
-                <span className={`text-2xs font-medium leading-tight ${selected ? 'text-white/60' : 'text-info-500'}`}>
-                  Festivo
-                </span>
-              )}
             </button>
           )
         })}

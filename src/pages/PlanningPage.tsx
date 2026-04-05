@@ -15,6 +15,7 @@ import { PlanningToolbar }    from '../components/PlanningToolbar'
 import { ValidationPanel }    from '../components/ValidationPanel'
 import { PlanningGrid }       from '../components/PlanningGrid'
 import { ShiftDrawer }        from '../components/ShiftDrawer'
+import { AbsenceDrawer }      from '../components/AbsenceDrawer'
 import { QuickAddPopover }    from '../components/QuickAddPopover'
 import { GanttPlanningView }  from '../components/gantt/GanttPlanningView'
 
@@ -69,6 +70,11 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
   const [selectedEmployment,  setSelectedEmployment]  = useState<Employment | null>(null)
   const [selectedDate,        setSelectedDate]        = useState<string | null>(null)
   const [selectedShift,       setSelectedShift]       = useState<Shift | null>(null)
+
+  // Absence drawer state
+  const [absenceDrawerOpen,     setAbsenceDrawerOpen]     = useState(false)
+  const [selectedAbsence,       setSelectedAbsence]       = useState<Absence | null>(null)
+  const [absenceEmployment,     setAbsenceEmployment]     = useState<Employment | null>(null)
 
   // Quick-add popover
   const [popover, setPopover] = useState<{
@@ -194,7 +200,7 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
       label:         LABELS[type],
       start_date:    popover.date,
       end_date:      popover.date,
-      status:        'requested',
+      status:        'approved',
       blocks_planning: type === 'vacation' || type === 'sick_leave',
     }
     setAbsences(prev => [...prev, newAbsence])
@@ -208,6 +214,20 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
     setSelectedShift(null)
     setPopover(null)
     setDrawerOpen(true)
+  }
+
+  function handleAbsenceClick(absence: Absence, employment: Employment) {
+    setSelectedAbsence(absence)
+    setAbsenceEmployment(employment)
+    setAbsenceDrawerOpen(true)
+  }
+
+  function handleAbsenceSave(updated: Absence) {
+    setAbsences(prev => prev.map(a => a.id === updated.id ? updated : a))
+  }
+
+  function handleAbsenceDelete(absenceId: string) {
+    setAbsences(prev => prev.filter(a => a.id !== absenceId))
   }
 
   function handleSaveShift(
@@ -233,6 +253,17 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
       setShifts(prev => [...prev, newShift])
     }
     recomputeViolations()
+  }
+
+  function handleGanttShiftDraw(employment: Employment, date: string, startTime: string, endTime: string) {
+    handleSaveShift({
+      employment_id: employment.id,
+      date,
+      start_time:    startTime,
+      end_time:      endTime,
+      center_id:     employment.center_id,
+      role:          employment.role,
+    })
   }
 
   function handleGanttShiftUpdate(shiftId: string, newStart: string, newEnd: string) {
@@ -397,17 +428,34 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
               shifts={weekShifts}
               allShifts={shifts}
               violations={violations}
+              absences={absences}
               planningStatus={planningStatus}
               standardWeeks={standardWeeks}
               onApplyStandardWeek={handleApplyStandardWeek}
               onCellClick={handleCellClick}
+              onAbsenceClick={handleAbsenceClick}
             />
           </>
         )}
 
         {/* ── Gantt view ──────────────────────────────────────────────────── */}
         {viewMode === 'gantt' && (
-          <GanttPlanningView
+          <>
+            <ValidationPanel
+              violations={violations}
+              onSelectEmployee={empId => {
+                const emp = MOCK_EMPLOYMENTS.find(e => e.id === empId)
+                if (emp) {
+                  const v = violations.find(v => v.employment_id === empId)
+                  const s = v?.shift_id ? shifts.find(sh => sh.id === v.shift_id) : null
+                  setSelectedEmployment(emp)
+                  setSelectedDate(s?.date ?? null)
+                  setSelectedShift(s ?? null)
+                  setDrawerOpen(true)
+                }
+              }}
+            />
+            <GanttPlanningView
             weekRange={weekRange}
             weekDays={weekDays}
             planningStatus={planningStatus}
@@ -429,7 +477,10 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
             onEmptyCellClick={handleGanttEmptyClick}
             standardWeeks={standardWeeks}
             onApplyStandardDay={handleGanttApplyStandardDay}
+            onAbsenceClick={handleAbsenceClick}
+            onShiftDraw={handleGanttShiftDraw}
           />
+          </>
         )}
       </div>
 
@@ -465,6 +516,16 @@ export function PlanningPage({ standardWeeks }: PlanningPageProps) {
         onClose={() => setDrawerOpen(false)}
         onSave={handleSaveShift}
         onDelete={handleDeleteShift}
+      />
+
+      {/* Absence drawer */}
+      <AbsenceDrawer
+        absence={selectedAbsence}
+        employment={absenceEmployment}
+        isOpen={absenceDrawerOpen}
+        onClose={() => setAbsenceDrawerOpen(false)}
+        onSave={handleAbsenceSave}
+        onDelete={handleAbsenceDelete}
       />
     </DndContext>
   )

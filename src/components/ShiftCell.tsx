@@ -1,15 +1,25 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { AlertCircle, AlertTriangle, Info, Plus, Moon } from 'lucide-react'
-import type { Shift, ValidationViolation } from '../types'
+import type { Shift, ValidationViolation, Absence } from '../types'
+
+const ABSENCE_STRIPE_COLORS: Record<string, string> = {
+  vacation:    '#dbeafe',
+  sick_leave:  '#fce7f3',
+  personal:    '#d1fae5',
+  justified:   '#fef3c7',
+  unjustified: '#fee2e2',
+}
 
 interface ShiftCellProps {
   employmentId: string
   date: string
   shifts: Shift[]
   violations: ValidationViolation[]
+  absence: Absence | null
   isHoliday: boolean
   isLocked: boolean
   onClick: (shift: Shift | null, cellRect?: DOMRect) => void
+  onAbsenceClick: (absence: Absence) => void
 }
 
 type CellState = 'empty' | 'filled' | 'error' | 'warning' | 'info' | 'locked'
@@ -112,9 +122,11 @@ export function ShiftCell({
   date,
   shifts,
   violations,
+  absence,
   isHoliday,
   isLocked,
   onClick,
+  onAbsenceClick,
 }: ShiftCellProps) {
   const cellId = `${employmentId}-${date}`
   const state = getCellState(shifts, violations, isHoliday, isLocked)
@@ -122,23 +134,43 @@ export function ShiftCell({
 
   const { setNodeRef: setDropRef, isOver } = useDroppable({ id: cellId, disabled: isLocked })
 
+  function handleCellClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (absence) { onAbsenceClick(absence); return }
+    if (!isLocked && isEmpty) onClick(null, e.currentTarget.getBoundingClientRect())
+  }
+
+  const stripeColor = absence ? (ABSENCE_STRIPE_COLORS[absence.type] ?? '#f3f4f6') : null
+
   return (
     <div
       ref={setDropRef}
-      onClick={isLocked || !isEmpty ? undefined : (e) => onClick(null, e.currentTarget.getBoundingClientRect())}
+      onClick={handleCellClick}
       className={`
         relative min-h-[72px] rounded-md border transition-all duration-100
         ${CELL_STATE_CLASSES[state]}
         ${isOver && !isLocked ? 'ring-2 ring-shift-500 ring-offset-1' : ''}
       `}
-      role={isEmpty ? 'button' : undefined}
+      role={isEmpty || absence ? 'button' : undefined}
       tabIndex={isEmpty && !isLocked ? 0 : undefined}
       onKeyDown={isEmpty && !isLocked ? e => { if (e.key === 'Enter' || e.key === ' ') onClick(null, (e.currentTarget as HTMLElement).getBoundingClientRect()) } : undefined}
-      aria-label={isEmpty ? 'Sin turno asignado' : `${shifts.length} turno(s)`}
+      aria-label={absence ? absence.label : isEmpty ? 'Sin turno asignado' : `${shifts.length} turno(s)`}
     >
+      {/* Absence stripe overlay */}
+      {stripeColor && (
+        <div
+          className="absolute inset-0 rounded-md pointer-events-none z-0"
+          style={{
+            opacity: 0.55,
+            background: `repeating-linear-gradient(45deg, ${stripeColor}, ${stripeColor} 6px, white 6px, white 12px)`,
+          }}
+        />
+      )}
       {isEmpty ? (
-        <div className="flex items-center justify-center min-h-[72px]">
-          <Plus className="w-4 h-4 text-neutral-300" />
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-[72px] gap-0.5">
+          {absence
+            ? <span className="text-2xs font-medium text-neutral-500 text-center px-1 leading-tight">{absence.label}</span>
+            : <Plus className="w-4 h-4 text-neutral-300" />
+          }
         </div>
       ) : (
         <div className="p-1.5 flex flex-col gap-1">
